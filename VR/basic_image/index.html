@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <title>A-Frame Layer Component - Basic</title>
+    <script src="../build.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  </head>
+  <body>
+    <div style="position:relative;">
+    <a-scene antialias="true">
+
+    <!-- Examples of adding objects (Spheres) to the scene -->
+      <a-sphere position="-5 0 2" radius="1.25" color="#EF2D5E"></a-sphere>
+      <a-sphere position="5 1.55 -5" radius="2.25" color="blue"></a-sphere>
+      <a-assets>
+      <!-- Creating a panarama from two images for the background -->
+        <!--<img id="left" src="https://i.imgur.com/nzhMTQB.jpg">
+        <img id="right" src="https://i.imgur.com/nzhMTQB.jpg"> -->
+        <img id="left" src="office2.jpg">
+        <img id="right" src="office2.jpg">
+        <!-- https://i.imgur.com/grfbUzn.jpg-- >
+        <!--<img id="left" src="https://i.imgur.com/cplXyB9.jpg">
+        <img id="right" src="https://i.imgur.com/cplXyB9.jpg"> -->
+      </a-assets>
+
+      <!-- Camera -->
+      <a-entity camera look-controls position="0 0 0" stereocam="eye:left;" ></a-entity>
+
+      <!-- Sky sphere -->
+      <a-sky id="sky1" src="#left" stereo="eye:left"></a-sky>
+      <a-sky id="sky2" src="#right" stereo="eye:right"></a-sky>
+
+
+      <!--<a-sky id="sky1" src="http://i.imgur.com/YAaxpv6.jpg" stereo="eye:left"></a-sky>-->
+      <!--<a-sky id="sky2" src="http://i.imgur.com/JUxTnzK.jpg" stereo="eye:right"></a-sky>-->
+
+
+    </a-scene>
+    <div style="position:absolute; top:5%; left:50%; z-index:1000;">
+        <center><h1><font color="green">DI VR</font></h1></center>
+
+  </body>
+</html>
