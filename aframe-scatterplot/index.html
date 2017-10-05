@@ -14,15 +14,40 @@
 <body>
 
    <a-scene>
+
+   <a-camera 
+		position="2 2 6" 
+		cursor-visible="true" 
+		cursor-scale="2" 
+		cursor-color="#4CC3D9" 
+		cursor-offset="2" 
+		cursor-maxdistance="100" 
+		cursor-opacity="0.5" 
+		cursor-fuse="true"
+   		>
+   	</a-camera>
     
+    <!-- https://github.com/zcanter/aframe-scatterplot -->
     <a-scatterplot 
 	    src="url(https://gist.githubusercontent.com/brentzuckerNCR/59dd874eeec96e14b776ce837fc6c097/raw/6ef43c8d5bcd53152d63c8f13141eee28339b803/data.aframescatterplot.json)" 
 	    x="CCUsage-Feb" 
 	    y="CCUsage-May" 
 	    z="CCUsage-Aug" 
 	    val="UsageGroup"
+	    xlabel="CC Usage - February"
+	    ylabel="CC Usage - May"
+	    zlabel="CC Usage - August"
+	    showTicks="false"
+	    showTickLabels="false"
+	    pointSize=".025"
+	    relationship="xyz"
+	    position="2 3 4"
+	    rotation="10 10 0"
+	    title="CC Usage Groups"
+	    pointSprite="https://raw.githubusercontent.com/zcanter/aframe-scatterplot/master/example/img/disc.png"
 	    >
-    	
     </a-scatterplot>
+  
   </a-scene>
+
 </body>
