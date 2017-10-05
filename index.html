@@ -10715,7 +10715,7 @@ paper-dropdown-menu paper-item {
         </template>
       </paper-listbox>
     </paper-dropdown-menu>
-    <div hidden$="[[!showForceCategoricalColorsCheckbox]]">
+    <div hidden$="[[showForceCategoricalColorsCheckbox]]">
       <paper-checkbox id="force-categorical-checkbox"></paper-checkbox>
       Use categorical coloring
       <paper-icon-button icon="help" class="help-icon"></paper-icon-button>
@@ -10866,23 +10866,335 @@ paper-dropdown-menu paper-item {
 
 </template>
 <script>//~~WEBPATH~~/vz-projector/vz-projector-data-panel.js
-var Wd=this&&this.__extends||function(){var a=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(a,c){a.__proto__=c}||function(a,c){for(var b in c)c.hasOwnProperty(b)&&(a[b]=c[b])};return function(b,c){function d(){this.constructor=b}a(b,c);b.prototype=null===c?Object.create(c):(d.prototype=c.prototype,new d)}}(),Xd=function(a){function b(){var b=null!==a&&a.apply(this,arguments)||this;b.forceCategoricalColoring=!1;return b}Wd(b,a);b.prototype.ready=function(){this.normalizeData=!0};
-b.prototype.initialize=function(a,b){var c=this;this.projector=a;this.dataProvider=b;this.setupUploadButtons();this.querySelector("#normalize-data-checkbox").addEventListener("change",function(){c.projector.setNormalizeData(c.normalizeData)});var d=this.querySelector("#force-categorical-checkbox");d.addEventListener("change",function(){c.setForceCategoricalColoring(d.checked)});this.dataProvider.retrieveRuns(function(a){c.runNames=a;0<c.runNames.length&&(c.selectedRun=a[0])})};b.prototype.setForceCategoricalColoring=
-function(a){this.forceCategoricalColoring=a;this.querySelector("#force-categorical-checkbox").checked=this.forceCategoricalColoring;this.updateMetadataUI(this.spriteAndMetadata.stats,this.metadataFile);this._selectedColorOptionNameChanged()};b.prototype.getSeparatorClass=function(a){return a?"separator":null};b.prototype.metadataChanged=function(a,b){this.spriteAndMetadata=a;this.metadataFile=b;this.updateMetadataUI(this.spriteAndMetadata.stats,this.metadataFile);this.selectedColorOptionName=this.colorOptions[0].name};
-b.prototype.addWordBreaks=function(a){return null==a?"":a.replace(/([\/=-_,])/g,"$1\x3cwbr\x3e")};b.prototype.updateMetadataUI=function(a,b){var c=this,d=this.querySelector("#metadata-file");d.innerHTML=this.addWordBreaks(b);d.title=b;var h=-1;this.labelOptions=a.map(function(a,b){a.isNumeric||-1!==h||(h=b);return a.name});this.selectedLabelOption=this.labelOptions[Math.max(0,h)];b=[{name:"No color map"}];a=a.filter(function(a){return!a.tooManyUniqueValues||a.isNumeric}).map(function(a){var b=c.forceCategoricalColoring||
-!a.tooManyUniqueValues;if(b){var d=d3.scaleOrdinal(d3.schemeCategory20);var e=d.range(),g=e.map(function(a,b){return e[3*b%e.length]});var h=a.uniqueEntries;d.range(g).domain(h.map(function(a){return a.label}))}else{var k=[{color:"#ffffdd",value:a.min},{color:"#1f2d86",value:a.max}];d=d3.scaleLinear().domain(k.map(function(a){return a.value})).range(k.map(function(a){return a.color}))}return{name:a.name,desc:b?a.uniqueEntries.length+(20<a.uniqueEntries.length?" non-unique":"")+" colors":"gradient",
-map:d,items:h,thresholds:k,tooManyUniqueValues:a.tooManyUniqueValues}});0<a.length&&b.push({name:"Metadata",isSeparator:!0});this.colorOptions=b.concat(a)};b.prototype.setNormalizeData=function(a){this.normalizeData=a};b.prototype._selectedTensorChanged=function(){var a=this;this.projector.updateDataSet(null,null,null);null!=this.selectedTensor&&(this.dataProvider.retrieveTensor(this.selectedRun,this.selectedTensor,function(b){var c=a.getEmbeddingInfoByName(a.selectedTensor).metadataPath;a.dataProvider.retrieveSpriteAndMetadata(a.selectedRun,
-a.selectedTensor,function(d){a.projector.updateDataSet(b,d,c)})}),this.projector.setSelectedTensor(this.selectedRun,this.getEmbeddingInfoByName(this.selectedTensor)))};b.prototype._selectedRunChanged=function(){var a=this;this.dataProvider.retrieveProjectorConfig(this.selectedRun,function(b){a.projectorConfig=b;b=a.projectorConfig.embeddings.map(function(a){return a.tensorName}).filter(function(b){b=a.getEmbeddingInfoByName(b).tensorShape;return 2===b.length&&1<b[0]&&1<b[1]}).sort(function(b,c){var d=
-a.getEmbeddingInfoByName(b),e=a.getEmbeddingInfoByName(c),g=!!d.metadataPath,h=!!e.metadataPath;if(!(!g&&!h||g&&h))return d.metadataPath?-1:1;g=Hc(c);h=Hc(b);if(!(!h&&!g||h&&g))return g?-1:1;d=d.tensorShape[0];e=e.tensorShape[0];return d!==e?e-d:b<=c?-1:1});a.tensorNames=b.map(function(b){return{name:b,shape:a.getEmbeddingInfoByName(b).tensorShape}});var c=a.addWordBreaks(a.projectorConfig.modelCheckpointPath),d=a.querySelector("#checkpoint-file");d.innerHTML=c;d.title=a.projectorConfig.modelCheckpointPath;
-b="demo"===a.projector.servingMode?a.projectorConfig.embeddings[0].tensorName:b[0];a.selectedTensor===b?a._selectedTensorChanged():a.selectedTensor=b})};b.prototype._selectedLabelOptionChanged=function(){this.projector.setSelectedLabelOption(this.selectedLabelOption)};b.prototype._selectedColorOptionNameChanged=function(){for(var a,b=0;b<this.colorOptions.length;b++)if(this.colorOptions[b].name===this.selectedColorOptionName){a=this.colorOptions[b];break}a&&(this.showForceCategoricalColorsCheckbox=
-!!a.tooManyUniqueValues,this.colorLegendRenderInfo=null==a.map?null:a.items?{items:a.items.map(function(b){return{color:a.map(b.label),label:b.label,count:b.count}}),thresholds:null}:{items:null,thresholds:a.thresholds},this.projector.setSelectedColorOption(a))};b.prototype.tensorWasReadFromFile=function(a,b){var c=this;gd(a,function(a){var d=c.querySelector("#checkpoint-file");d.innerText=b;d.title=b;c.projector.updateDataSet(a)})};b.prototype.metadataWasReadFromFile=function(a,b){var c=this;id(a,
-function(a){c.projector.updateDataSet(c.projector.dataSet,a,b)})};b.prototype.getEmbeddingInfoByName=function(a){for(var b=0;b<this.projectorConfig.embeddings.length;b++){var c=this.projectorConfig.embeddings[b];if(c.tensorName===a)return c}};b.prototype.setupUploadButtons=function(){var a=this,b=this.querySelector("#file");b.onchange=function(){var c=b.files[0];b.value="";var d=new FileReader;d.onload=function(){a.tensorWasReadFromFile(d.result,c.name)};d.readAsArrayBuffer(c)};this.querySelector("#upload-tensors").onclick=
-function(){b.click()};var e=this.querySelector("#file-metadata");e.onchange=function(){var b=e.files[0];e.value="";var c=new FileReader;c.onload=function(){a.metadataWasReadFromFile(c.result,b.name)};c.readAsArrayBuffer(b)};this.querySelector("#upload-metadata").onclick=function(){e.click()};"demo"!==this.projector.servingMode&&(this.$$("#publish-container").style.display="none",this.$$("#upload-tensors-step-container").style.display="none",this.$$("#upload-metadata-label").style.display="none");
-this.$$("#demo-data-buttons-container").style.display="block";var g=this.$$("#projector-config-template"),h={embeddings:[{tensorName:"My tensor",tensorShape:[1E3,50],tensorPath:"https://raw.githubusercontent.com/.../tensors.tsv",metadataPath:"https://raw.githubusercontent.com/.../optional.metadata.tsv"}]};this.setProjectorConfigTemplateJson(g,h);var k=this.$$("#config-sprite-checkbox");k.onchange=function(){k.checked?h.embeddings[0].sprite={imagePath:"https://github.com/.../optional.sprite.png",singleImageDim:[32,
-32]}:delete h.embeddings[0].sprite;a.setProjectorConfigTemplateJson(g,h)};var l=this.$$("#config-bookmarks-checkbox");l.onchange=function(){l.checked?h.embeddings[0].bookmarksPath="https://raw.githubusercontent.com/.../bookmarks.txt":delete h.embeddings[0].bookmarksPath;a.setProjectorConfigTemplateJson(g,h)};var m=this.$$("#config-metadata-checkbox");m.onchange=function(){m.checked?h.embeddings[0].metadataPath="https://raw.githubusercontent.com/.../optional.metadata.tsv":delete h.embeddings[0].metadataPath;
-a.setProjectorConfigTemplateJson(g,h)};var p=this.$$("#projector-config-url"),r=this.$$("#projector-share-url"),n=this.$$("#projector-share-url-link");p.onchange=function(){var a=location.protocol+"//"+location.host+location.pathname+"?config\x3d"+p.value;r.value=a;n.href=a}};b.prototype.setProjectorConfigTemplateJson=function(a,b){a.value=JSON.stringify(b,null,2)};b.prototype._getNumTensorsLabel=function(){return 1===this.tensorNames.length?"1 tensor":this.tensorNames.length+" tensors"};b.prototype._getNumRunsLabel=
-function(){return 1===this.runNames.length?"1 run":this.runNames.length+" runs"};b.prototype._hasChoices=function(a){return 1<a.length};return b}(Polymer.Class({is:"vz-projector-data-panel",properties:{selectedTensor:{type:String,observer:"_selectedTensorChanged"},selectedRun:{type:String,observer:"_selectedRunChanged"},selectedColorOptionName:{type:String,notify:!0,observer:"_selectedColorOptionNameChanged"},selectedLabelOption:{type:String,notify:!0,observer:"_selectedLabelOptionChanged"},normalizeData:Boolean,
-showForceCategoricalColorsCheckbox:Boolean}}));document.registerElement(Xd.prototype.is,Xd);
+var Wd = this && this.__extends || function() {
+        var a = Object.setPrototypeOf || {
+            __proto__: []
+        }
+        instanceof Array && function(a, c) {
+            a.__proto__ = c
+        } || function(a, c) {
+            for (var b in c) c.hasOwnProperty(b) && (a[b] = c[b])
+        };
+        return function(b, c) {
+            function d() {
+                this.constructor = b
+            }
+            a(b, c);
+            b.prototype = null === c ? Object.create(c) : (d.prototype = c.prototype, new d)
+        }
+    }(),
+    Xd = function(a) {
+        function b() {
+            var b = null !== a && a.apply(this, arguments) || this;
+            b.forceCategoricalColoring = !1;
+            return b
+        }
+        Wd(b, a);
+        b.prototype.ready = function() {
+            this.normalizeData = !0
+        };
+        b.prototype.initialize = function(a, b) {
+            var c = this;
+            this.projector = a;
+            this.dataProvider = b;
+            this.setupUploadButtons();
+            this.querySelector("#normalize-data-checkbox").addEventListener("change", function() {
+                c.projector.setNormalizeData(c.normalizeData)
+            });
+            var d = this.querySelector("#force-categorical-checkbox");
+            d.addEventListener("change", function() {
+                c.setForceCategoricalColoring(d.checked)
+            });
+            this.dataProvider.retrieveRuns(function(a) {
+                c.runNames = a;
+                0 < c.runNames.length && (c.selectedRun = a[0])
+            })
+        };
+        b.prototype.setForceCategoricalColoring =
+            function(a) {
+                this.forceCategoricalColoring = a;
+                this.querySelector("#force-categorical-checkbox").checked = this.forceCategoricalColoring;
+                this.updateMetadataUI(this.spriteAndMetadata.stats, this.metadataFile);
+                this._selectedColorOptionNameChanged()
+            };
+        b.prototype.getSeparatorClass = function(a) {
+            return a ? "separator" : null
+        };
+        b.prototype.metadataChanged = function(a, b) {
+            this.spriteAndMetadata = a;
+            this.metadataFile = b;
+            this.updateMetadataUI(this.spriteAndMetadata.stats, this.metadataFile);
+            this.selectedColorOptionName = this.colorOptions[0].name
+        };
+        b.prototype.addWordBreaks = function(a) {
+            return null == a ? "" : a.replace(/([\/=-_,])/g, "$1\x3cwbr\x3e")
+        };
+        b.prototype.updateMetadataUI = function(a, b) {
+            var c = this,
+                d = this.querySelector("#metadata-file");
+            d.innerHTML = this.addWordBreaks(b);
+            d.title = b;
+            var h = -1;
+            this.labelOptions = a.map(function(a, b) {
+                a.isNumeric || -1 !== h || (h = b);
+                return a.name
+            });
+            this.selectedLabelOption = this.labelOptions[Math.max(0, h)];
+            // b = [{
+            //     name: "No color map"
+            // }];
+            b = [];
+            a = a.filter(function(a) {
+                return !a.tooManyUniqueValues || a.isNumeric
+            }).map(function(a) {
+                var b = c.forceCategoricalColoring ||
+                    !a.tooManyUniqueValues;
+                if (b) {
+                    var d = d3.scaleOrdinal(d3.schemeCategory20);
+                    var e = d.range(),
+                        g = e.map(function(a, b) {
+                            return e[3 * b % e.length]
+                        });
+                    var h = a.uniqueEntries;
+                    d.range(g).domain(h.map(function(a) {
+                        return a.label
+                    }))
+                } else {
+                    var k = [{
+                        color: "#ffffdd",
+                        value: a.min
+                    }, {
+                        color: "#1f2d86",
+                        value: a.max
+                    }];
+                    d = d3.scaleLinear().domain(k.map(function(a) {
+                        return a.value
+                    })).range(k.map(function(a) {
+                        return a.color
+                    }))
+                }
+                return {
+                    name: a.name,
+                    desc: b ? a.uniqueEntries.length + (20 < a.uniqueEntries.length ? " non-unique" : "") + " colors" : "gradient",
+                    map: d,
+                    items: h,
+                    thresholds: k,
+                    tooManyUniqueValues: a.tooManyUniqueValues
+                }
+            });
+            // 0 < a.length && b.push({
+            //     name: "Metadata",
+            //     isSeparator: !0
+            // });
+            this.colorOptions = b.concat(a)
+        };
+        b.prototype.setNormalizeData = function(a) {
+            this.normalizeData = a
+        };
+        b.prototype._selectedTensorChanged = function() {
+            var a = this;
+            this.projector.updateDataSet(null, null, null);
+            null != this.selectedTensor && (this.dataProvider.retrieveTensor(this.selectedRun, this.selectedTensor, function(b) {
+                var c = a.getEmbeddingInfoByName(a.selectedTensor).metadataPath;
+                a.dataProvider.retrieveSpriteAndMetadata(a.selectedRun,
+                    a.selectedTensor,
+                    function(d) {
+                        a.projector.updateDataSet(b, d, c)
+                    })
+            }), this.projector.setSelectedTensor(this.selectedRun, this.getEmbeddingInfoByName(this.selectedTensor)))
+        };
+        b.prototype._selectedRunChanged = function() {
+            var a = this;
+            this.dataProvider.retrieveProjectorConfig(this.selectedRun, function(b) {
+                a.projectorConfig = b;
+                b = a.projectorConfig.embeddings.map(function(a) {
+                    return a.tensorName
+                }).filter(function(b) {
+                    b = a.getEmbeddingInfoByName(b).tensorShape;
+                    return 2 === b.length && 1 < b[0] && 1 < b[1]
+                }).sort(function(b, c) {
+                    var d =
+                        a.getEmbeddingInfoByName(b),
+                        e = a.getEmbeddingInfoByName(c),
+                        g = !!d.metadataPath,
+                        h = !!e.metadataPath;
+                    if (!(!g && !h || g && h)) return d.metadataPath ? -1 : 1;
+                    g = Hc(c);
+                    h = Hc(b);
+                    if (!(!h && !g || h && g)) return g ? -1 : 1;
+                    d = d.tensorShape[0];
+                    e = e.tensorShape[0];
+                    return d !== e ? e - d : b <= c ? -1 : 1
+                });
+                a.tensorNames = b.map(function(b) {
+                    return {
+                        name: b,
+                        shape: a.getEmbeddingInfoByName(b).tensorShape
+                    }
+                });
+                var c = a.addWordBreaks(a.projectorConfig.modelCheckpointPath),
+                    d = a.querySelector("#checkpoint-file");
+                d.innerHTML = c;
+                d.title = a.projectorConfig.modelCheckpointPath;
+                b = "demo" === a.projector.servingMode ? a.projectorConfig.embeddings[0].tensorName : b[0];
+                a.selectedTensor === b ? a._selectedTensorChanged() : a.selectedTensor = b
+            })
+        };
+        b.prototype._selectedLabelOptionChanged = function() {
+            this.projector.setSelectedLabelOption(this.selectedLabelOption)
+        };
+        b.prototype._selectedColorOptionNameChanged = function() {
+            for (var a, b = 0; b < this.colorOptions.length; b++)
+                if (this.colorOptions[b].name === this.selectedColorOptionName) {
+                    a = this.colorOptions[b];
+                    break
+                }
+            a && (this.showForceCategoricalColorsCheckbox = !!a.tooManyUniqueValues, this.colorLegendRenderInfo = null == a.map ? null : a.items ? {
+                items: a.items.map(function(b) {
+                    return {
+                        color: a.map(b.label),
+                        label: b.label,
+                        count: b.count
+                    }
+                }),
+                thresholds: null
+            } : {
+                items: null,
+                thresholds: a.thresholds
+            }, this.projector.setSelectedColorOption(a))
+        };
+        b.prototype.tensorWasReadFromFile = function(a, b) {
+            var c = this;
+            gd(a, function(a) {
+                var d = c.querySelector("#checkpoint-file");
+                d.innerText = b;
+                d.title = b;
+                c.projector.updateDataSet(a)
+            })
+        };
+        b.prototype.metadataWasReadFromFile = function(a, b) {
+            var c = this;
+            id(a,
+                function(a) {
+                    c.projector.updateDataSet(c.projector.dataSet, a, b)
+                })
+        };
+        b.prototype.getEmbeddingInfoByName = function(a) {
+            for (var b = 0; b < this.projectorConfig.embeddings.length; b++) {
+                var c = this.projectorConfig.embeddings[b];
+                if (c.tensorName === a) return c
+            }
+        };
+        b.prototype.setupUploadButtons = function() {
+            var a = this,
+                b = this.querySelector("#file");
+            b.onchange = function() {
+                var c = b.files[0];
+                b.value = "";
+                var d = new FileReader;
+                d.onload = function() {
+                    a.tensorWasReadFromFile(d.result, c.name)
+                };
+                d.readAsArrayBuffer(c)
+            };
+            this.querySelector("#upload-tensors").onclick =
+                function() {
+                    b.click()
+                };
+            var e = this.querySelector("#file-metadata");
+            e.onchange = function() {
+                var b = e.files[0];
+                e.value = "";
+                var c = new FileReader;
+                c.onload = function() {
+                    a.metadataWasReadFromFile(c.result, b.name)
+                };
+                c.readAsArrayBuffer(b)
+            };
+            this.querySelector("#upload-metadata").onclick = function() {
+                e.click()
+            };
+            "demo" !== this.projector.servingMode && (this.$$("#publish-container").style.display = "none", this.$$("#upload-tensors-step-container").style.display = "none", this.$$("#upload-metadata-label").style.display = "none");
+            this.$$("#demo-data-buttons-container").style.display = "block";
+            var g = this.$$("#projector-config-template"),
+                h = {
+                    embeddings: [{
+                        tensorName: "My tensor",
+                        tensorShape: [1E3, 50],
+                        tensorPath: "https://raw.githubusercontent.com/.../tensors.tsv",
+                        metadataPath: "https://raw.githubusercontent.com/.../optional.metadata.tsv"
+                    }]
+                };
+            this.setProjectorConfigTemplateJson(g, h);
+            var k = this.$$("#config-sprite-checkbox");
+            k.onchange = function() {
+                k.checked ? h.embeddings[0].sprite = {
+                    imagePath: "https://github.com/.../optional.sprite.png",
+                    singleImageDim: [32,
+                        32
+                    ]
+                } : delete h.embeddings[0].sprite;
+                a.setProjectorConfigTemplateJson(g, h)
+            };
+            var l = this.$$("#config-bookmarks-checkbox");
+            l.onchange = function() {
+                l.checked ? h.embeddings[0].bookmarksPath = "https://raw.githubusercontent.com/.../bookmarks.txt" : delete h.embeddings[0].bookmarksPath;
+                a.setProjectorConfigTemplateJson(g, h)
+            };
+            var m = this.$$("#config-metadata-checkbox");
+            m.onchange = function() {
+                m.checked ? h.embeddings[0].metadataPath = "https://raw.githubusercontent.com/.../optional.metadata.tsv" : delete h.embeddings[0].metadataPath;
+                a.setProjectorConfigTemplateJson(g, h)
+            };
+            var p = this.$$("#projector-config-url"),
+                r = this.$$("#projector-share-url"),
+                n = this.$$("#projector-share-url-link");
+            p.onchange = function() {
+                var a = location.protocol + "//" + location.host + location.pathname + "?config\x3d" + p.value;
+                r.value = a;
+                n.href = a
+            }
+        };
+        b.prototype.setProjectorConfigTemplateJson = function(a, b) {
+            a.value = JSON.stringify(b, null, 2)
+        };
+        b.prototype._getNumTensorsLabel = function() {
+            return 1 === this.tensorNames.length ? "1 tensor" : this.tensorNames.length + " tensors"
+        };
+        b.prototype._getNumRunsLabel =
+            function() {
+                return 1 === this.runNames.length ? "1 run" : this.runNames.length + " runs"
+            };
+        b.prototype._hasChoices = function(a) {
+            return 1 < a.length
+        };
+        return b
+    }(Polymer.Class({
+        is: "vz-projector-data-panel",
+        properties: {
+            selectedTensor: {
+                type: String,
+                observer: "_selectedTensorChanged"
+            },
+            selectedRun: {
+                type: String,
+                observer: "_selectedRunChanged"
+            },
+            selectedColorOptionName: {
+                type: String,
+                notify: !0,
+                observer: "_selectedColorOptionNameChanged"
+            },
+            selectedLabelOption: {
+                type: String,
+                notify: !0,
+                observer: "_selectedLabelOptionChanged"
+            },
+            normalizeData: Boolean,
+            showForceCategoricalColorsCheckbox: Boolean
+        }
+    }));
+document.registerElement(Xd.prototype.is, Xd);
 </script>
 </dom-module>
 
