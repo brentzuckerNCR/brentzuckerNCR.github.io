@@ -6,8 +6,8 @@
 			1000,         
 			50       
 		],       
-		"tensorPath": "https://gist.githubusercontent.com/brentzuckerNCR/80cee29507e377772b74424fe23e5cf4/raw/4a68f00b0036dd51f22f8cf4541b1a60ac38e60f/features.tsv",       
-		"metadataPath": "https://gist.githubusercontent.com/brentzuckerNCR/c31b3fb750f307a8cc79a833f998a241/raw/8d8b045308c3bc3fcf818342b2e4233ac278da07/labels.tsv"     
+		"tensorPath": "https://gist.githubusercontent.com/brentzuckerNCR/80cee29507e377772b74424fe23e5cf4/raw/f99b441dcc0da43fe33af369040cdaec41c2b112/features.tsv",       
+		"metadataPath": "https://gist.githubusercontent.com/brentzuckerNCR/c31b3fb750f307a8cc79a833f998a241/raw/a3124e713fdab79981f63418f57b3429d756ddc0/labels.tsv"     
 	}   
 ] 
 }
